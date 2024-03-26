@@ -53,9 +53,31 @@ def dayDisplay(dateObj):
         if((iteration * 99) - 355 > 330):
             row += 1
             iteration = 0
-
-def gameLoop(gameDisplay, calendarList, calendarImg, arrowImg, arrowImgLeft, dateObj):
+            
+def calendarTaskView(textBoxText):
     while True:
+        print(textBoxText)
+        break
+            
+    
+
+def gameLoop(gameDisplay, calendarList, calendarImg, arrowImg, arrowImgLeft, textBox, dateObj):
+    textBoxActive = False
+    textBoxText = ""
+    while True:
+        gameDisplay.fill("white")
+        gameDisplay.blit(calendarImg, calendarImg.get_rect(center = gameDisplay.get_rect().center)) #Obtained from StackOverflow
+        arrowBlit = gameDisplay.blit(arrowImg, [650,-285])
+        leftArrowBlit = gameDisplay.blit(arrowImgLeft, [-340,-285])
+        textBoxBlit = gameDisplay.blit(textBox, [460,600])
+        textDisplay(f'{dateObj.month} / {dateObj.year}', -50, -350)
+        dayDisplay(dateObj)
+        pygame.display.flip()
+        
+        if (textBoxText != "") and (not textBoxActive):
+            calendarTaskView(textBoxText)
+            textBoxText = ""
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT: 
                 sys.exit()
@@ -66,7 +88,14 @@ def gameLoop(gameDisplay, calendarList, calendarImg, arrowImg, arrowImgLeft, dat
                 if arrowBlit.collidepoint(pygame.mouse.get_pos()):
                     dateObj = moveMonthRight(dateObj)
                     calendarList = calendarCreate(dateObj, daysInCurrentMonth(dateObj))
+                if textBoxBlit.collidepoint(pygame.mouse.get_pos()):
+                    textBoxActive = True;
             if event.type == pygame.KEYDOWN:
+                if textBoxActive:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_ESCAPE:
+                        textBoxActive = False
+                    else:
+                        textBoxText += event.unicode
                 if event.key == pygame.K_ESCAPE:
                     sys.exit()
                 if event.key == pygame.K_LEFT:
@@ -75,14 +104,6 @@ def gameLoop(gameDisplay, calendarList, calendarImg, arrowImg, arrowImgLeft, dat
                 if event.key == pygame.K_RIGHT:
                     dateObj = moveMonthRight(dateObj)
                     calendarList = calendarCreate(dateObj, daysInCurrentMonth(dateObj))
-                    
-        gameDisplay.fill("white")
-        gameDisplay.blit(calendarImg, calendarImg.get_rect(center = gameDisplay.get_rect().center)) #Obtained from StackOverflow
-        arrowBlit = gameDisplay.blit(arrowImg, [650,-285])
-        leftArrowBlit = gameDisplay.blit(arrowImgLeft, [-340,-285])
-        textDisplay(f'{dateObj.month} / {dateObj.year}', -50, -350)
-        dayDisplay(dateObj)
-        pygame.display.flip()
         
 
 #General Code and Initilization
@@ -92,11 +113,13 @@ pygame.display.set_caption('calendar Application')
 calendarImg = pygame.image.load(os.path.join(".","images","CalendarDrawing.png"))
 arrowImg = pygame.image.load(os.path.join(".","images","arrow.png"))
 arrowImgLeft = pygame.transform.flip(arrowImg, 1, 0)
+textBox = pygame.image.load(os.path.join(".","images","textboxcropped.png"))
+textBox = pygame.transform.scale_by(textBox, 0.9)
 calendarList = []
 dateObj = datetime.now()
 calendarList = calendarCreate(dateObj, daysInCurrentMonth(dateObj))
 
-gameLoop(gameDisplay, calendarList, calendarImg, arrowImg, arrowImgLeft, dateObj)
+gameLoop(gameDisplay, calendarList, calendarImg, arrowImg, arrowImgLeft, textBox, dateObj)
     
     
         
