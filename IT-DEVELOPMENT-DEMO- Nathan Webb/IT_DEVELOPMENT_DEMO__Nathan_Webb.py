@@ -53,12 +53,28 @@ calenderList = calenderCreate(dateObj)
 print(calenderList)
 
 while True:
+    
+    gameDisplay.fill("white")
+    gameDisplay.blit(calendarImg, calendarImg.get_rect(center = gameDisplay.get_rect().center)) #Obtained from StackOverflow
+    arrowBlit = gameDisplay.blit(arrowImg, [650,-285])
+    leftArrowBlit = gameDisplay.blit(arrowImgLeft, [-340,-285])
+    pygame.display.flip()
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT: 
             sys.exit()
         if event.type == pygame.MOUSEBUTTONDOWN: #This will be user clicking arrows and or grids
-            sys.exit()
+            if leftArrowBlit.collidepoint(pygame.mouse.get_pos()):
+                dateObj = moveMonthLeft(dateObj)
+                calenderList = calenderCreate(dateObj)
+                print(calenderList)
+            if arrowBlit.collidepoint(pygame.mouse.get_pos()):
+                dateObj = moveMonthRight(dateObj)
+                calenderList = calenderCreate(dateObj)
+                print(calenderList)
         if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                sys.exit()
             if event.key == pygame.K_LEFT:
                 dateObj = moveMonthLeft(dateObj)
                 calenderList = calenderCreate(dateObj)
@@ -68,11 +84,5 @@ while True:
                 calenderList = calenderCreate(dateObj)
                 print(calenderList)
     
-    
-    gameDisplay.fill("white")
-    gameDisplay.blit(calendarImg, calendarImg.get_rect(center = gameDisplay.get_rect().center)) #Obtained from StackOverflow
-    gameDisplay.blit(arrowImg, [650,-285])
-    gameDisplay.blit(arrowImgLeft, [-340,-285])
-    pygame.display.flip()
     
         
