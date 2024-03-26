@@ -29,11 +29,23 @@ def moveMonthRight(dateObj):
         dateObj = date(dateObj.year, dateObj.month + 1, dateObj.day)
     return dateObj
 
+def textDisplay():
+    font = pygame.font.SysFont("Times New Roman")
+    
+
+def calenderDisplay(calenderList, gameDisplay):
+    firstDayofWeek = date(dateObj.year, dateObj.month, 1).weekday()
+    
+    for i in range(len(calenderList)):
+        textDisplay()
+
 #standard pygame initialization
 pygame.init()
 gameDisplay = pygame.display.set_mode((1280,720))
 pygame.display.set_caption('Calender Application')
 calendarImg = pygame.image.load(os.path.join(".","images","CalendarDrawing.jpg"))
+arrowImg = pygame.image.load(os.path.join(".","images","arrow.png"))
+arrowImgLeft = pygame.transform.flip(arrowImg, 1, 0)
 
 calenderList = []
 dateObj = datetime.now()
@@ -56,8 +68,11 @@ while True:
                 calenderList = calenderCreate(dateObj)
                 print(calenderList)
     
+    
     gameDisplay.fill("white")
-    gameDisplay.blit(calendarImg,(150,25))
+    gameDisplay.blit(calendarImg, calendarImg.get_rect(center = gameDisplay.get_rect().center)) #Obtained from StackOverflow
+    gameDisplay.blit(arrowImg, [650,-285])
+    gameDisplay.blit(arrowImgLeft, [-340,-285])
     pygame.display.flip()
     
         
